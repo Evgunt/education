@@ -1,0 +1,26 @@
+{
+    "name": "evgunt/animalshop",
+    "type": "project",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "gr401 zyvyr",
+            "email": "Evgunt@mail.ru"
+        }
+    ],
+    "minimum-stability": "dev",
+    "require": {
+        "php": "^7.4 | ^8.0",
+        "illuminate/database": "10.x-dev",
+        "illuminate/events": "10.x-dev",
+        "nikic/fast-route": "2.0.x-dev",
+        "evgunt/collect": "dev-main",
+        "phpunit/phpunit": "10.0.x-dev"
+    },
+    "autoload": {
+        "psr-4": {
+            "Src\\": "core/Src/",
+            "": "app/"
+        }
+    }
+}

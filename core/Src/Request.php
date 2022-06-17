@@ -29,7 +29,8 @@ class Request
 
     public function get($field)
     {
-        return $this->body[$field];
+        if(isset($this->body[$field]))
+            return $this->body[$field];
     }
 
     public function files(): array

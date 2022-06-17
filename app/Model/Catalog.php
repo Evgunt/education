@@ -62,16 +62,28 @@ class Catalog
         }
         return ['message'=>'error'];
     }
+    public function setImg(): string
+    {
+        if (isset($_FILES['img']) && $_FILES['img']['error'] != 4) {
+            $filename = str_replace(' ','',basename($_FILES['img']['name']));
+            move_uploaded_file($_FILES["img"]["tmp_name"], '../public/upload/' . $filename);
+            return $filename;
+        }
+        return 'error';
+    }
     public function setItemCats($token): string
     {
         $user = DB::select('SELECT admin FROM users WHERE token=?', [$token]);
         if($user[0]->admin)
         {
+            $img = self::setImg();
+            if($img=='error')
+                $img = null;
             $cats = DB::select('SELECT title FROM catalog WHERE id=?', [$_POST['cats']]);
             if($cats)
             {
-                $get = DB::insert("INSERT INTO item (catalog, title, content, price) VALUES (?,?,?,?) ",
-                    [$_POST['cats'], $_POST['title'], $_POST['content'], $_POST['price']]);
+                $get = DB::insert("INSERT INTO item (catalog, title, content, price, img) VALUES (?,?,?,?) ",
+                    [$_POST['cats'], $_POST['title'], $_POST['content'], $_POST['price'], $img]);
                 if($get)
                     return 'success';
                 else 

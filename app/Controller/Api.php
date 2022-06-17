@@ -36,9 +36,8 @@ class Api
     }
     public function itemAll(Request $request)
     {
-        $message = '';
         $item = (new \Model\Catalog)->getItemAll($request->id);
-        (new View())->toJSON(['item' => $item, 'message'=>$message]);
+        (new View())->toJSON(['item' => $item]);
     }
     public function login(Request $request): void
     {
@@ -103,7 +102,7 @@ class Api
             }
         }
     }
-    public function itemfilter(Request $request)
+    public function itemFilter(Request $request)
     {
         if($request->get('type') && $request->get('cats'))
             (new View())->toJSON(['items' => (new \Model\Catalog)->filterItems($request->get('type'), $request->get('cats'))]);
@@ -111,9 +110,8 @@ class Api
     }
     public function Lists(Request $request)
     {
-        if($request->get('id'))
-            (new View())->toJSON(['lists' => (new \Model\Lists)->getList($request->get('id'))]);
-        elseif($request->method['POST'])
+        $id = $request->get('id');
+        if($request->method == "POST")
         {
             $validator = new Validator($request->all(), [
                 'title' => ['required'],
@@ -123,8 +121,10 @@ class Api
             if ($validator->fails()) {
                 (new View())->toJSON(['errors' => $validator->errors()]);
             }
-            (new View())->toJSON(['lists' => (new \Model\Lists)->setList($request->get('id'))]);
+            (new View())->toJSON(['lists' => (new \Model\Lists)->setList($request->headers['Authorization'])]);
         }
+        elseif(isset($id) && $id!='')
+            (new View())->toJSON(['lists' => (new \Model\Lists)->getList($request->get('id'))]);
         else
             (new View())->toJSON(['lists' => (new \Model\Lists)->getListsAll()]);
     }

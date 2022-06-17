@@ -12,11 +12,6 @@ Route::add('POST', '/setCatalog', [Controller\Api::class, 'setCatalog']);
 Route::add('POST', '/setItem', [Controller\Api::class, 'setItem']);
 
 Route::add('POST', '/search', [Controller\Api::class, 'search']);
-Route::add('GET', '/itemfilter', [Controller\Api::class, 'itemfilter']);
+Route::add('GET', '/itemfilter', [Controller\Api::class, 'itemFilter']);
 
 Route::add(['GET', 'POST'], '/lists', [Controller\Api::class, 'Lists']);
-
-
-
-
-

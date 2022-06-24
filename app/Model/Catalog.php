@@ -106,4 +106,74 @@ class Catalog
         }
         return $request;
     }
+    public function editCats($token)
+    {
+        $user = DB::select('SELECT admin FROM users WHERE token=?', [$token]);
+        if($user[0]->admin)
+        {
+            if(isset($_POST['content']))
+                $content = $_POST['content'];
+            else
+                $content = '';
+            $request = DB::update('UPDATE catalog SET title=?, content=? WHERE id=?', [$_POST['title'], $content, $_POST['id']]);
+            if($request)
+                return 'success';
+            else 
+                return 'error';
+        }
+    }
+    public function editItems($token)
+    {
+        $user = DB::select('SELECT admin FROM users WHERE token=?', [$token]);
+        if($user[0]->admin)
+        {
+            $img = self::setImg();
+            if($img=='error')
+                $img = null;
+            if(isset($_POST['content']))
+                $content = $_POST['content'];
+            else
+                $content = '';
+            $cats = DB::select('SELECT title FROM catalog WHERE id=?', [$_POST['cats']]);
+            if($cats)
+            {
+                $get = DB::update("UPDATE item  SET title=?, content=?, price=?, img=? WHERE id=?",
+                    [$_POST['title'], $content, $_POST['price'], $img, $_POST['id']]);
+                if($get)
+                    return 'success';
+                else 
+                    return 'error';
+            }
+            else
+                return 'Unknown category';
+        }
+        return 'Access denied';
+    }
+    public function dellCats($token, $id)
+    {
+        $user = DB::select('SELECT admin FROM users WHERE token=?', [$token]);
+        if($user[0]->admin)
+        {
+            $get = DB::delete("DELETE FROM catalog WHERE id=?",[$id]);
+            if($get)
+                return 'success';
+            else 
+                return 'error';
+        }
+        return 'Access denied';
+    }
+    public function dellItems($token, $id)
+    {
+        $user = DB::select('SELECT admin FROM users WHERE token=?', [$token]);
+        if($user[0]->admin)
+        {
+            $get = DB::delete("DELETE FROM item WHERE id=?",[$id]);
+            if($get)
+                return 'success';
+            else 
+                return 'error';
+        }
+        return 'Access denied';
+    }
+    
 }

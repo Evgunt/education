@@ -27,18 +27,47 @@ class Lists
     }
    public function setList($token)
    {
-     $user = DB::select('SELECT admin FROM users WHERE token=?', [$token]);
-     if($user[0]->admin)
-     {
-		$img = self::setImg();
-		if($img=='error')
-			$img = null;
-		$response = DB::insert("INSERT INTO lists (title, content, img) VALUES (?,?,?)",
-		[$_POST['title'], $_POST['content'], $img]);
-		if($response)
-			return 'sucsess';
-		return 'error';
-     }
-     return 'error';
+        $user = DB::select('SELECT admin FROM users WHERE token=?', [$token]);
+        if($user[0]->admin)
+        {
+            $img = self::setImg();
+            if($img=='error')
+                $img = null;
+            $response = DB::insert("INSERT INTO lists (title, content, img) VALUES (?,?,?)",
+            [$_POST['title'], $_POST['content'], $img]);
+            if($response)
+                return 'sucsess';
+            return 'error';
+        }
+        return 'error';
+   }
+   public function editList($token)
+   {
+        $user = DB::select('SELECT admin FROM users WHERE token=?', [$token]);
+        if($user[0]->admin)
+        {
+            $img = self::setImg();
+            if($img=='error')
+                $img = null;
+            $response = DB::update("UPDATE lists SET title=?, content=?, img=? WHERE id=?",
+            [$_POST['title'], $_POST['content'], $img, $_POST['id']]);
+            if($response)
+                return 'sucsess';
+            return 'error';
+        }
+        return 'error';
+   }
+   public function dellList($token, $id)
+   {
+       $user = DB::select('SELECT admin FROM users WHERE token=?', [$token]);
+       if($user[0]->admin)
+       {
+           $get = DB::delete("DELETE FROM lists WHERE id=?",[$id]);
+           if($get)
+               return 'success';
+           else 
+               return 'error';
+       }
+       return 'Access denied';
    }
 }
